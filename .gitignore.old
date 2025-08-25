@@ -1,0 +1,404 @@
+6.3266/# ===========================
+# Stock Trading Simulator
+# Git Ignore File
+# ===========================
+
+# ===========================
+# FRONTEND (React/Node.js)
+# ===========================
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production builds
+build/
+dist/
+frontend/build/
+frontend/dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Package manager files
+package-lock.json
+yarn.lock
+frontend/package-lock.json
+frontend/yarn.lock
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+frontend/pids
+frontend/*.pid
+frontend/*.seed
+frontend/*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+.nyc_output
+frontend/coverage/
+frontend/.nyc_output
+
+# ESLint cache
+.eslintcache
+frontend/.eslintcache
+
+# Optional npm cache directory
+.npm
+frontend/.npm
+
+# Optional REPL history
+.node_repl_history
+frontend/.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+frontend/*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+frontend/.yarn-integrity
+
+# ===========================
+# BACKEND (Python/FastAPI)
+# ===========================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+
+# C extensions
+*.so
+backend/*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+backend/.Python
+backend/build/
+backend/develop-eggs/
+backend/dist/
+backend/downloads/
+backend/eggs/
+backend/.eggs/
+backend/lib/
+backend/lib64/
+backend/parts/
+backend/sdist/
+backend/var/
+backend/wheels/
+backend/pip-wheel-metadata/
+backend/share/python-wheels/
+backend/*.egg-info/
+backend/.installed.cfg
+backend/*.egg
+backend/MANIFEST
+
+# PyInstaller
+backend/*.manifest
+backend/*.spec
+
+# Installer logs
+backend/pip-log.txt
+backend/pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+backend/htmlcov/
+backend/.tox/
+backend/.nox/
+backend/.coverage
+backend/.coverage.*
+backend/.cache
+backend/nosetests.xml
+backend/coverage.xml
+backend/*.cover
+backend/*.py,cover
+backend/.hypothesis/
+backend/.pytest_cache/
+
+# Translations
+backend/*.mo
+backend/*.pot
+
+# Django stuff (if applicable):
+backend/*.log
+backend/local_settings.py
+backend/db.sqlite3
+backend/db.sqlite3-journal
+
+# Flask stuff (if applicable):
+backend/instance/
+backend/.webassets-cache
+
+# Scrapy stuff (if applicable):
+backend/.scrapy
+
+# Sphinx documentation
+backend/docs/_build/
+
+# PyBuilder
+backend/target/
+
+# Jupyter Notebook
+backend/.ipynb_checkpoints
+
+# IPython
+backend/profile_default/
+backend/ipython_config.py
+
+# pyenv
+backend/.python-version
+
+# pipenv
+backend/Pipfile.lock
+
+# PEP 582
+backend/__pypackages__/
+
+# Celery stuff
+backend/celerybeat-schedule
+backend/celerybeat.pid
+
+# SageMath parsed files
+backend/*.sage.py
+
+# Environments
+backend/.env
+backend/.venv
+backend/env/
+backend/venv/
+backend/ENV/
+backend/env.bak/
+backend/venv.bak/
+
+# Spyder project settings
+backend/.spyderproject
+backend/.spyproject
+
+# Rope project settings
+backend/.ropeproject
+
+# mkdocs documentation
+backend/site
+
+# mypy
+backend/.mypy_cache/
+backend/.dmypy.json
+backend/dmypy.json
+
+# Pyre type checker
+backend/.pyre/
+
+# FastAPI specific
+backend/alembic.ini
+backend/alembic/
+
+# ===========================
+# DATABASE FILES
+# ===========================
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL dump files
+*.sql
+
+# Database backups
+*.backup
+*.bak
+
+# ===========================
+# DOCKER
+# ===========================
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# ===========================
+# LOGS & TEMP FILES
+# ===========================
+
+# Log files
+*.log
+logs/
+log/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===========================
+# IDE & EDITOR FILES
+# ===========================
+
+# Visual Studio Code
+.vscode/
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iws
+*.iml
+*.ipr
+__pycache__/
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ===========================
+# SECURITY & SENSITIVE DATA
+# ===========================
+
+# API keys and secrets
+.env
+.env.local
+.env.production
+.env.staging
+secrets.json
+config/secrets.py
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+
+# JWT secrets
+jwt_secret.txt
+secret_key.txt
+
+# ===========================
+# DEPLOYMENT & CI/CD
+# ===========================
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Kubernetes
+*.kubeconfig
+
+# CI/CD
+.github/workflows/secrets
+
+# ===========================
+# MONITORING & ANALYTICS
+# ===========================
+
+# Sentry
+.sentryclirc
+
+# New Relic
+newrelic.ini
+
+# ===========================
+# MISCELLANEOUS
+# ===========================
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Local configuration overrides
+local_config.py
+local_settings.py
+
+# Documentation builds
+docs/_build/
+docs/build/
+
+# Cache directories
+.cache/
+cache/
+
+# Testing artifacts
+.pytest_cache/
+.coverage
+
+# Performance monitoring
+.prof
+*.prof
+
+# Redis dump file
+dump.rdb
