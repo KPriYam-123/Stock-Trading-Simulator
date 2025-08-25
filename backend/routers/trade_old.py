@@ -26,7 +26,7 @@ class TradeResponse(BaseModel):
     status: str
     timestamp: datetime
 
-# Mock trade storage
+# Mock trade storage (in real app, this would be a database)
 mock_trades = []
 
 @router.post("/place-order", response_model=TradeResponse)
@@ -36,7 +36,7 @@ async def place_order(
 ):
     """Place a buy or sell order"""
     
-    # Mock stock prices
+    # Mock stock prices (in real app, get from market data service)
     mock_prices = {
         'AAPL': 175.50, 'GOOGL': 2845.20, 'MSFT': 378.90, 'TSLA': 245.67,
         'AMZN': 3456.78, 'NVDA': 456.32, 'META': 324.15, 'NFLX': 456.78
@@ -45,38 +45,34 @@ async def place_order(
     if trade_request.symbol not in mock_prices:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Stock symbol {trade_request.symbol} not found"
+            detail="Invalid stock symbol"
         )
     
-    # Get current price (use limit price if provided and valid)
-    current_price = mock_prices[trade_request.symbol]
-    execution_price = current_price
-    
-    if trade_request.price_type == "limit" and trade_request.limit_price:
-        if trade_request.order_type == "buy" and trade_request.limit_price < current_price:
-            # Can't execute buy limit order above current price
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Buy limit price ${trade_request.limit_price} is below current price ${current_price}"
-            )
-        elif trade_request.order_type == "sell" and trade_request.limit_price > current_price:
-            # Can't execute sell limit order below current price
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Sell limit price ${trade_request.limit_price} is above current price ${current_price}"
-            )
-        execution_price = float(trade_request.limit_price)
+    # Determine execution price
+    if trade_request.price_type == 'market':
+        execution_price = Decimal(str(mock_prices[trade_request.symbol]))
+    else:
+        execution_price = trade_request.limit_price
     
     total = execution_price * trade_request.quantity
     
-    # Create trade record
+    # Check wallet balance for buy orders
+    if trade_request.order_type == 'buy':
+        if total > current_user.wallet_balance:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Insufficient funds"
+            )
+    
+    # Create mock trade record
+    trade_id = f"TRD_{len(mock_trades) + 1:06d}"
     trade = TradeResponse(
-        id=f"trade_{len(mock_trades) + 1}",
+        id=trade_id,
         symbol=trade_request.symbol,
         quantity=trade_request.quantity,
         order_type=trade_request.order_type,
-        price=Decimal(str(execution_price)),
-        total=Decimal(str(total)),
+        price=execution_price,
+        total=total,
         status="executed",
         timestamp=datetime.now()
     )
@@ -91,6 +87,7 @@ async def get_trade_history(
     current_user: dict = Depends(get_current_user)
 ):
     """Get user's trade history"""
+    # In real app, filter by user_id
     return mock_trades[-limit:]
 
 @router.get("/positions")
@@ -98,6 +95,7 @@ async def get_positions(
     current_user: dict = Depends(get_current_user)
 ):
     """Get current stock positions"""
+    # Mock positions (in real app, calculate from trade history)
     positions = [
         {"symbol": "AAPL", "quantity": 10, "avg_price": 170.25},
         {"symbol": "GOOGL", "quantity": 2, "avg_price": 2800.00},

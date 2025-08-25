@@ -10,7 +10,7 @@ export const loginUser = createAsyncThunk(
       formData.append('username', username);
       formData.append('password', password);
 
-      const response = await api.post('/users/token', formData, {
+      const response = await api.post('/auth/login', formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -21,7 +21,7 @@ export const loginUser = createAsyncThunk(
       api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       
       // Fetch user profile
-      const userResponse = await api.get('/users/me');
+      const userResponse = await api.get('/auth/me');
       return userResponse.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.detail || 'Login failed');
@@ -33,7 +33,7 @@ export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async ({ username, email, password }, { dispatch, rejectWithValue }) => {
     try {
-      await api.post('/users/register', {
+      await api.post('/auth/register', {
         username,
         email,
         password,
@@ -51,7 +51,7 @@ export const fetchUserProfile = createAsyncThunk(
   'auth/fetchUserProfile',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/users/me');
+      const response = await api.get('/auth/me');
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.detail || 'Failed to fetch user profile');
@@ -63,14 +63,14 @@ export const updateWallet = createAsyncThunk(
   'auth/updateWallet',
   async ({ amount, transaction_type, description }, { rejectWithValue }) => {
     try {
-      await api.post('/users/wallet/update', {
+      await api.post('/auth/wallet/update', {
         amount: parseFloat(amount),
         transaction_type,
         description: description || `Wallet ${transaction_type} via dashboard`
       });
 
       // Fetch updated user data
-      const userResponse = await api.get('/users/me');
+      const userResponse = await api.get('/auth/me');
       return userResponse.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.detail || 'Wallet update failed');

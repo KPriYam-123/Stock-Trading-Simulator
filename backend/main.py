@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routers import user, trade
+from routers import auth, trade
 from websocket_manager import websocket_endpoint
 
 app = FastAPI(title="Stock Trading Simulator", version="1.0.0")
@@ -16,7 +16,7 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(user.router)
+app.include_router(auth.router)
 app.include_router(trade.router)
 
 # WebSocket endpoint

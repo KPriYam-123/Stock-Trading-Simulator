@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { portfolioService } from '../../services/portfolioService';
 
 // Mock portfolio data
 const mockPortfolio = [
@@ -7,11 +8,76 @@ const mockPortfolio = [
   { symbol: 'MSFT', shares: 5, avgPrice: 365.50, currentPrice: 378.90 },
 ];
 
+// Async thunks for portfolio operations
+export const fetchPortfolioHoldings = createAsyncThunk(
+  'portfolio/fetchHoldings',
+  async (_, { rejectWithValue }) => {
+    try {
+      const holdings = await portfolioService.getHoldings();
+      return holdings;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchPortfolioPerformance = createAsyncThunk(
+  'portfolio/fetchPerformance',
+  async (_, { rejectWithValue }) => {
+    try {
+      const performance = await portfolioService.getPerformanceMetrics();
+      return performance;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchPortfolioProfitLoss = createAsyncThunk(
+  'portfolio/fetchProfitLoss',
+  async (period = '1M', { rejectWithValue }) => {
+    try {
+      const profitLoss = await portfolioService.getProfitLoss(period);
+      return profitLoss;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchPortfolioAllocation = createAsyncThunk(
+  'portfolio/fetchAllocation',
+  async (_, { rejectWithValue }) => {
+    try {
+      const allocation = await portfolioService.getAllocation();
+      return allocation;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchPortfolioValueHistory = createAsyncThunk(
+  'portfolio/fetchValueHistory',
+  async (period = '1M', { rejectWithValue }) => {
+    try {
+      const valueHistory = await portfolioService.getValueHistory(period);
+      return valueHistory;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   holdings: mockPortfolio,
   totalValue: 0,
   totalGainLoss: 0,
   totalGainLossPercent: 0,
+  performance: {},
+  profitLoss: [],
+  allocation: [],
+  valueHistory: [],
   loading: false,
   error: null,
 };
@@ -23,16 +89,19 @@ const portfolioSlice = createSlice({
     updatePortfolioPrices: (state, action) => {
       const stockPrices = action.payload; // Array of stocks with current prices
       
-      state.holdings = state.holdings.map(holding => {
-        const stock = stockPrices.find(s => s.symbol === holding.symbol);
-        if (stock) {
-          return {
-            ...holding,
-            currentPrice: stock.price
-          };
-        }
-        return holding;
-      });
+      // Only update if we have valid stock prices array
+      if (Array.isArray(stockPrices) && stockPrices.length > 0) {
+        state.holdings = state.holdings.map(holding => {
+          const stock = stockPrices.find(s => s.symbol === holding.symbol);
+          if (stock) {
+            return {
+              ...holding,
+              currentPrice: stock.price
+            };
+          }
+          return holding;
+        });
+      }
       
       // Calculate totals
       const totalCurrent = state.holdings.reduce((total, holding) => 
@@ -87,7 +156,83 @@ const portfolioSlice = createSlice({
       state.totalValue = 0;
       state.totalGainLoss = 0;
       state.totalGainLossPercent = 0;
+      state.performance = {};
+      state.profitLoss = [];
+      state.allocation = [];
+      state.valueHistory = [];
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Fetch Holdings
+      .addCase(fetchPortfolioHoldings.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPortfolioHoldings.fulfilled, (state, action) => {
+        state.loading = false;
+        state.holdings = action.payload;
+      })
+      .addCase(fetchPortfolioHoldings.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
+      // Fetch Performance
+      .addCase(fetchPortfolioPerformance.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPortfolioPerformance.fulfilled, (state, action) => {
+        state.loading = false;
+        state.performance = action.payload;
+      })
+      .addCase(fetchPortfolioPerformance.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
+      // Fetch Profit/Loss
+      .addCase(fetchPortfolioProfitLoss.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPortfolioProfitLoss.fulfilled, (state, action) => {
+        state.loading = false;
+        state.profitLoss = action.payload;
+      })
+      .addCase(fetchPortfolioProfitLoss.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
+      // Fetch Allocation
+      .addCase(fetchPortfolioAllocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPortfolioAllocation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allocation = action.payload;
+      })
+      .addCase(fetchPortfolioAllocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
+      // Fetch Value History
+      .addCase(fetchPortfolioValueHistory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPortfolioValueHistory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.valueHistory = action.payload;
+      })
+      .addCase(fetchPortfolioValueHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

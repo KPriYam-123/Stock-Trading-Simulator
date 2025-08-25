@@ -5,16 +5,19 @@ import { updatePortfolioPrices } from '../store/slices/portfolioSlice';
 const Portfolio = () => {
   const dispatch = useAppDispatch();
   const { holdings, loading, error } = useAppSelector((state) => state.portfolio);
+  const { stocks } = useAppSelector((state) => state.stocks);
 
   useEffect(() => {
     // Initialize with mock data or fetch from API if needed
     // For now, we'll just update prices when stocks change
     const interval = setInterval(() => {
-      dispatch(updatePortfolioPrices());
+      if (stocks && Array.isArray(stocks)) {
+        dispatch(updatePortfolioPrices(stocks));
+      }
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [dispatch]);
+  }, [dispatch, stocks]);
 
   const calculateValue = (item) => {
     return (item.shares * item.currentPrice).toFixed(2);
